@@ -1,0 +1,768 @@
+<div class="header">
+  <app-navbar></app-navbar>
+
+  <div class="title">
+    <h1>Clientes</h1>
+    <button
+      *ngIf="authService.hasRole('ROLE_OPERADOR')"
+      class="btn btn-success"
+      (click)="loadInactiveClients()"
+      data-bs-toggle="modal"
+      data-bs-target="#clientesInactivos"
+    >
+      Clientes Inactivos
+    </button>
+  </div>
+</div>
+
+<!-- Interfaz que permite buscar clientes por nombre -->
+<div class="container search_client-container">
+  <form>
+    <div class="form-group">
+      <label for="busqueda-clientes" class="form-label"
+        >Nombre del cliente:</label
+      >
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          id="busqueda-clientes"
+          name="busqueda-clientes"
+          ngModel
+          #nombreClienteBuscado="ngModel"
+          required
+          pattern="^[A-Za-z\s]*$"
+          placeholder="Ingrese el nombre del cliente a buscar."
+        />
+        <div
+          *ngIf="
+            nombreClienteBuscado?.invalid &&
+            (nombreClienteBuscado?.touched || nombreClienteBuscado?.dirty)
+          "
+          class="col-lg-12"
+        >
+          <div *ngIf="nombreClienteBuscado.errors?.['required']">
+            <small class="text-danger"
+              >Se debe ingresar el nombre del cliente.</small
+            >
+          </div>
+          <div *ngIf="nombreClienteBuscado.errors?.['pattern']">
+            <small class="text-danger">Caracteres inválidos.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button
+      [disabled]="nombreClienteBuscado.invalid"
+      type="submit"
+      class="btn btn-success ms-3 search-button"
+      (click)="searchClients(nombreClienteBuscado.value)"
+      [ngClass]="
+        nombreClienteBuscado?.invalid &&
+        (nombreClienteBuscado?.touched || nombreClienteBuscado?.dirty)
+          ? 'margin-bottom'
+          : ''
+      "
+      data-bs-toggle="modal"
+      data-bs-target="#clientesBuscados"
+    >
+      Buscar cliente
+    </button>
+  </form>
+</div>
+
+<!-- Tabla que muestra los clientes (activos o inactivos) -->
+<div class="container" id="main">
+  <div class="row">
+    <div class="col-lg-12 text-center">
+      <div class="table-responsive-lg">
+        <table class="table table-bordered">
+          <thead class="table-dark">
+            <tr>
+              <th>Nombre</th>
+              <th>Teléfono</th>
+              <th style="width: 20%">Dirección</th>
+              <th>E-mail</th>
+              <th>Pedidos</th>
+              <th *ngIf="authService.hasRole('ROLE_OPERADOR')">Deudas</th>
+              <th *ngIf="authService.hasRole('ROLE_OPERADOR')">Opciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cliente of clientes">
+              <td>{{ cliente.nombre }} {{ cliente.apellido }}</td>
+              <td>{{ cliente.telefono }}</td>
+              <td>
+                {{ cliente.direccion }}
+              </td>
+              <td>{{ cliente.email }}</td>
+              <td>
+                <button
+                  class="btn btn-info"
+                  data-bs-toggle="modal"
+                  data-bs-target="#pedidosCliente"
+                  (click)="getPedidosCliente(cliente.pedidos)"
+                  (click)="setNombreCliente(cliente.nombre, cliente.apellido)"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="#fff"
+                    viewBox="0 0 256 256"
+                  >
+                    <rect width="256" height="256" fill="none"></rect>
+                    <path
+                      d="M247.3,124.8c-.3-.8-8.8-19.6-27.6-38.5C194.6,61.3,162.9,48,128,48S61.4,61.3,36.3,86.3C17.5,105.2,9,124,8.7,124.8a7.9,7.9,0,0,0,0,6.4c.3.8,8.8,19.6,27.6,38.5C61.4,194.7,93.1,208,128,208s66.6-13.3,91.7-38.3c18.8-18.9,27.3-37.7,27.6-38.5A7.9,7.9,0,0,0,247.3,124.8ZM128,92a36,36,0,1,1-36,36A36,36,0,0,1,128,92Z"
+                    ></path>
+                  </svg>
+                </button>
+              </td>
+              <td *ngIf="authService.hasRole('ROLE_OPERADOR')">
+                <button
+                  *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                  class="btn btn-info me-2"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deudasCliente"
+                  (click)="getDeudasCliente(cliente.deudas)"
+                  (click)="setNombreCliente(cliente.nombre, cliente.apellido)"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="#fff"
+                    viewBox="0 0 256 256"
+                  >
+                    <rect width="256" height="256" fill="none"></rect>
+                    <path
+                      d="M247.3,124.8c-.3-.8-8.8-19.6-27.6-38.5C194.6,61.3,162.9,48,128,48S61.4,61.3,36.3,86.3C17.5,105.2,9,124,8.7,124.8a7.9,7.9,0,0,0,0,6.4c.3.8,8.8,19.6,27.6,38.5C61.4,194.7,93.1,208,128,208s66.6-13.3,91.7-38.3c18.8-18.9,27.3-37.7,27.6-38.5A7.9,7.9,0,0,0,247.3,124.8ZM128,92a36,36,0,1,1-36,36A36,36,0,0,1,128,92Z"
+                    ></path>
+                  </svg>
+                </button>
+                <button
+                  *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                  class="btn btn-success"
+                  [routerLink]="['../../nueva-deuda', cliente.idCliente]"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="#fff"
+                    viewBox="0 0 256 256"
+                  >
+                    <rect width="256" height="256" fill="none"></rect>
+                    <path
+                      d="M128,24A104,104,0,1,0,232,128,104.2,104.2,0,0,0,128,24Zm40,112H136v32a8,8,0,0,1-16,0V136H88a8,8,0,0,1,0-16h32V88a8,8,0,0,1,16,0v32h32a8,8,0,0,1,0,16Z"
+                    ></path>
+                  </svg>
+                </button>
+              </td>
+              <td
+                *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                class="flex-cell"
+              >
+                <button
+                  *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                  class="btn btn-success me-2"
+                  [routerLink]="['../../modificar-cliente', cliente.idCliente]"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="#fff"
+                    viewBox="0 0 256 256"
+                  >
+                    <rect width="256" height="256" fill="none"></rect>
+                    <path
+                      d="M224,120v88a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32h88a8,8,0,0,1,0,16H48V208H208V120a8,8,0,0,1,16,0Zm5.7-50.3-96,96A8.1,8.1,0,0,1,128,168H96a8,8,0,0,1-8-8V128a8.1,8.1,0,0,1,2.3-5.7l96-96a8.1,8.1,0,0,1,11.4,0l32,32A8.1,8.1,0,0,1,229.7,69.7Zm-17-5.7L192,43.3,179.3,56,200,76.7Z"
+                    ></path>
+                  </svg>
+                </button>
+                <button
+                  *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                  class="btn btn-danger"
+                  (click)="eliminarCliente(cliente)"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="#fff"
+                    viewBox="0 0 256 256"
+                  >
+                    <rect width="256" height="256" fill="none"></rect>
+                    <path
+                      d="M216,48H176V40a24.1,24.1,0,0,0-24-24H104A24.1,24.1,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM112,168a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm0-120H96V40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8Z"
+                    ></path>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <app-paginador
+          *ngIf="paginador && route"
+          [paginador]="paginador"
+          [route]="route"
+        ></app-paginador>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal que permite ver los pedidos del cliente -->
+<div
+  class="modal fade"
+  id="pedidosCliente"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="pedidosClienteLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <!-- Cabecera del modal -->
+      <div class="modal-header">
+        <div class="col-lg-12">
+          <h3>Pedidos de {{ nombreCliente }}</h3>
+        </div>
+      </div>
+      <!-- Cuerpo del modal -->
+      <div class="modal-body">
+        <div
+          class="col-lg-12 text-center"
+          *ngIf="pedidosCliente.length > 0; else noPedidosFound"
+        >
+          <div class="table-responsive-lg">
+            <table class="table table-bordered">
+              <thead class="table-dark">
+                <tr>
+                  <th>Nombre del receptor</th>
+                  <th>Dirección de reparto</th>
+                  <th>Fecha</th>
+                  <th>Total</th>
+                  <th>Pendiente</th>
+                  <th>Productos</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let pedido of pedidosCliente">
+                  <td>{{ pedido.nombreDelReceptor }}</td>
+                  <td>{{ pedido.direccionDeReparto }}</td>
+                  <td>{{ pedido.fecha }}</td>
+                  <td>{{ pedido.total }}</td>
+                  <td>
+                    {{
+                      pedido.pendiente
+                        ? "Entrega pendiente"
+                        : "Pedido entregado"
+                    }}
+                  </td>
+                  <td>
+                    <button
+                      class="btn btn-info"
+                      data-bs-dismiss="modal"
+                      data-bs-toggle="modal"
+                      data-bs-target="#productosPedidosCliente"
+                      (click)="getProductosPedidoCliente(pedido.productos)"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        fill="#fff"
+                        viewBox="0 0 256 256"
+                      >
+                        <rect width="256" height="256" fill="none"></rect>
+                        <path
+                          d="M247.3,124.8c-.3-.8-8.8-19.6-27.6-38.5C194.6,61.3,162.9,48,128,48S61.4,61.3,36.3,86.3C17.5,105.2,9,124,8.7,124.8a7.9,7.9,0,0,0,0,6.4c.3.8,8.8,19.6,27.6,38.5C61.4,194.7,93.1,208,128,208s66.6-13.3,91.7-38.3c18.8-18.9,27.3-37.7,27.6-38.5A7.9,7.9,0,0,0,247.3,124.8ZM128,92a36,36,0,1,1-36,36A36,36,0,0,1,128,92Z"
+                        ></path>
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <ng-template #noPedidosFound>
+          <div class="col-lg-12 text-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="230"
+              height="230"
+              fill="#2b8a3e"
+              viewBox="0 0 256 256"
+            >
+              <rect width="256" height="256" fill="none"></rect>
+              <path
+                d="M128,24A104,104,0,1,0,232,128,104.2,104.2,0,0,0,128,24Zm-18.3,98.3a8.1,8.1,0,0,1,0,11.4,8.2,8.2,0,0,1-11.4,0L88,123.3,77.7,133.7a8.2,8.2,0,0,1-11.4,0,8.1,8.1,0,0,1,0-11.4L76.7,112,66.3,101.7A8.1,8.1,0,0,1,77.7,90.3L88,100.7,98.3,90.3a8.1,8.1,0,0,1,11.4,11.4L99.3,112ZM128,192a12,12,0,1,1,12-12A12,12,0,0,1,128,192Zm61.7-69.7a8.1,8.1,0,0,1,0,11.4,8.2,8.2,0,0,1-11.4,0L168,123.3l-10.3,10.4a8.2,8.2,0,0,1-11.4,0,8.1,8.1,0,0,1,0-11.4L156.7,112l-10.4-10.3a8.1,8.1,0,0,1,11.4-11.4L168,100.7l10.3-10.4a8.1,8.1,0,0,1,11.4,11.4L179.3,112Z"
+              ></path>
+            </svg>
+            <p class="text-not-found">¡No se encontraron pedidos!</p>
+          </div>
+        </ng-template>
+      </div>
+      <!-- Footer del modal -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal que permite ver los productos de los pedidos del cliente -->
+<div
+  class="modal fade"
+  id="productosPedidosCliente"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="productosPedidosClienteLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <!-- Cabecera del modal -->
+      <div class="modal-header">
+        <div class="col-lg-12">
+          <h3>Productos del pedido</h3>
+        </div>
+      </div>
+      <!-- Cuerpo del modal -->
+      <div class="modal-body">
+        <div
+          class="col-lg-12 text-center"
+          *ngIf="productosPedidosCliente.length > 0"
+        >
+          <div class="table-responsive-lg">
+            <table class="table table-bordered">
+              <thead class="table-dark">
+                <tr>
+                  <th>Imagen</th>
+                  <th>Nombre</th>
+                  <th>Precio</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let producto of productosPedidosCliente">
+                  <td>
+                    <img
+                      [src]="'data:image/png;base64,' + producto.imageBytes"
+                      class="product-img"
+                    />
+                  </td>
+                  <td>{{ producto.nombre }}</td>
+                  <td>
+                    {{ producto.precio | currency : "CLP" : "symbol-narrow" }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- Footer del modal -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal que permite ver las deudas del cliente -->
+<div
+  class="modal fade"
+  id="deudasCliente"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="deudasClienteLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <!-- Cabecera del modal -->
+      <div class="modal-header">
+        <div class="col-lg-12">
+          <h3>Deudas de {{ nombreCliente }}</h3>
+        </div>
+      </div>
+      <!-- Cuerpo del modal -->
+      <div class="modal-body">
+        <div
+          class="col-lg-12 text-center"
+          *ngIf="deudasCliente.length > 0; else noDebtsFound"
+        >
+          <div class="table-responsive-lg">
+            <table class="table table-bordered">
+              <thead class="table-dark">
+                <tr>
+                  <th style="width: 50%">Motivo</th>
+                  <th>Monto</th>
+                  <th>Fecha</th>
+                  <th>Vigente</th>
+                  <th>Opciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let deuda of deudasCliente">
+                  <td>{{ deuda.motivo }}</td>
+                  <td>
+                    {{ deuda.monto | currency : "CLP" : "symbol-narrow" }}
+                  </td>
+                  <td>{{ deuda.fecha }}</td>
+                  <td *ngIf="deuda.vigente; else deudaCancelada">Vigente</td>
+
+                  <ng-template #deudaCancelada>
+                    <td>Pagada</td>
+                  </ng-template>
+                  <td>
+                    <button
+                      *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                      class="btn btn-success me-3"
+                      (click)="modifyDebtStatus(deuda)"
+                    >
+                      Modificar estado deuda
+                    </button>
+
+                    <button
+                      *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                      class="btn btn-success me-2"
+                      [routerLink]="['../../modificar-deuda', deuda.idDeuda]"
+                      data-bs-dismiss="modal"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        fill="#fff"
+                        viewBox="0 0 256 256"
+                      >
+                        <rect width="256" height="256" fill="none"></rect>
+                        <path
+                          d="M224,120v88a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32h88a8,8,0,0,1,0,16H48V208H208V120a8,8,0,0,1,16,0Zm5.7-50.3-96,96A8.1,8.1,0,0,1,128,168H96a8,8,0,0,1-8-8V128a8.1,8.1,0,0,1,2.3-5.7l96-96a8.1,8.1,0,0,1,11.4,0l32,32A8.1,8.1,0,0,1,229.7,69.7Zm-17-5.7L192,43.3,179.3,56,200,76.7Z"
+                        ></path>
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <ng-template #noDebtsFound>
+          <div class="col-lg-12 text-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="230"
+              height="230"
+              fill="#2b8a3e"
+              viewBox="0 0 256 256"
+            >
+              <rect width="256" height="256" fill="none"></rect>
+              <path
+                d="M128,24A104,104,0,1,0,232,128,104.2,104.2,0,0,0,128,24ZM92,96a12,12,0,1,1-12,12A12,12,0,0,1,92,96Zm84.5,60a56,56,0,0,1-97,0,8,8,0,1,1,13.8-8,40.1,40.1,0,0,0,69.4,0,8,8,0,0,1,13.8,8Zm3.5-40H148a8,8,0,0,1,0-16h32a8,8,0,0,1,0,16Z"
+              ></path>
+            </svg>
+            <p class="text-not-found">¡El cliente no registra deudas!</p>
+          </div>
+        </ng-template>
+      </div>
+      <!-- Footer del modal -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal que permite ver los clientes buscados  -->
+<div
+  class="modal fade"
+  id="clientesBuscados"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="clientesBuscadosLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <!-- Cabecera del modal -->
+      <div class="modal-header">
+        <div class="col-lg-12">
+          <h3>Resultados de la búsqueda</h3>
+        </div>
+      </div>
+      <!-- Cuerpo del modal -->
+      <div class="modal-body">
+        <div
+          class="col-lg-12 text-center"
+          *ngIf="clientesBuscados.length > 0; else noProductsFound"
+        >
+          <div class="table-responsive-lg">
+            <table class="table table-bordered">
+              <thead class="table-dark">
+                <tr>
+                  <th>Nombre</th>
+                  <th>Teléfono</th>
+                  <th style="width: 20%">Dirección</th>
+                  <th>E-mail</th>
+                  <th>Pedidos</th>
+                  <th *ngIf="authService.hasRole('ROLE_OPERADOR')">Deudas</th>
+                  <th *ngIf="authService.hasRole('ROLE_OPERADOR')">Opciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let cliente of clientesBuscados">
+                  <td>{{ cliente.nombre }} {{ cliente.apellido }}</td>
+                  <td>{{ cliente.telefono }}</td>
+                  <td>
+                    {{ cliente.direccion }}
+                  </td>
+                  <td>{{ cliente.email }}</td>
+                  <td>
+                    <button
+                      class="btn btn-info"
+                      data-bs-toggle="modal"
+                      data-bs-target="#pedidosCliente"
+                      (click)="getPedidosCliente(cliente.pedidos)"
+                      (click)="
+                        setNombreCliente(cliente.nombre, cliente.apellido)
+                      "
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        fill="#fff"
+                        viewBox="0 0 256 256"
+                      >
+                        <rect width="256" height="256" fill="none"></rect>
+                        <path
+                          d="M247.3,124.8c-.3-.8-8.8-19.6-27.6-38.5C194.6,61.3,162.9,48,128,48S61.4,61.3,36.3,86.3C17.5,105.2,9,124,8.7,124.8a7.9,7.9,0,0,0,0,6.4c.3.8,8.8,19.6,27.6,38.5C61.4,194.7,93.1,208,128,208s66.6-13.3,91.7-38.3c18.8-18.9,27.3-37.7,27.6-38.5A7.9,7.9,0,0,0,247.3,124.8ZM128,92a36,36,0,1,1-36,36A36,36,0,0,1,128,92Z"
+                        ></path>
+                      </svg>
+                    </button>
+                  </td>
+                  <td *ngIf="authService.hasRole('ROLE_OPERADOR')">
+                    <button
+                      *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                      class="btn btn-info me-2"
+                      data-bs-toggle="modal"
+                      data-bs-target="#deudasCliente"
+                      (click)="getDeudasCliente(cliente.deudas)"
+                      (click)="
+                        setNombreCliente(cliente.nombre, cliente.apellido)
+                      "
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        fill="#fff"
+                        viewBox="0 0 256 256"
+                      >
+                        <rect width="256" height="256" fill="none"></rect>
+                        <path
+                          d="M247.3,124.8c-.3-.8-8.8-19.6-27.6-38.5C194.6,61.3,162.9,48,128,48S61.4,61.3,36.3,86.3C17.5,105.2,9,124,8.7,124.8a7.9,7.9,0,0,0,0,6.4c.3.8,8.8,19.6,27.6,38.5C61.4,194.7,93.1,208,128,208s66.6-13.3,91.7-38.3c18.8-18.9,27.3-37.7,27.6-38.5A7.9,7.9,0,0,0,247.3,124.8ZM128,92a36,36,0,1,1-36,36A36,36,0,0,1,128,92Z"
+                        ></path>
+                      </svg>
+                    </button>
+                    <button
+                      *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                      class="btn btn-success"
+                      [routerLink]="['../../nueva-deuda', cliente.idCliente]"
+                      data-bs-dismiss="modal"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        fill="#fff"
+                        viewBox="0 0 256 256"
+                      >
+                        <rect width="256" height="256" fill="none"></rect>
+                        <path
+                          d="M128,24A104,104,0,1,0,232,128,104.2,104.2,0,0,0,128,24Zm40,112H136v32a8,8,0,0,1-16,0V136H88a8,8,0,0,1,0-16h32V88a8,8,0,0,1,16,0v32h32a8,8,0,0,1,0,16Z"
+                        ></path>
+                      </svg>
+                    </button>
+                  </td>
+                  <td
+                    *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                    class="flex-cell"
+                  >
+                    <button
+                      *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                      class="btn btn-success me-2"
+                      [routerLink]="[
+                        '../../modificar-cliente',
+                        cliente.idCliente
+                      ]"
+                      data-bs-dismiss="modal"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        fill="#fff"
+                        viewBox="0 0 256 256"
+                      >
+                        <rect width="256" height="256" fill="none"></rect>
+                        <path
+                          d="M224,120v88a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32h88a8,8,0,0,1,0,16H48V208H208V120a8,8,0,0,1,16,0Zm5.7-50.3-96,96A8.1,8.1,0,0,1,128,168H96a8,8,0,0,1-8-8V128a8.1,8.1,0,0,1,2.3-5.7l96-96a8.1,8.1,0,0,1,11.4,0l32,32A8.1,8.1,0,0,1,229.7,69.7Zm-17-5.7L192,43.3,179.3,56,200,76.7Z"
+                        ></path>
+                      </svg>
+                    </button>
+                    <button
+                      *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                      class="btn btn-danger"
+                      (click)="eliminarCliente(cliente)"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        fill="#fff"
+                        viewBox="0 0 256 256"
+                      >
+                        <rect width="256" height="256" fill="none"></rect>
+                        <path
+                          d="M216,48H176V40a24.1,24.1,0,0,0-24-24H104A24.1,24.1,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM112,168a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm0-120H96V40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8Z"
+                        ></path>
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <ng-template #noProductsFound>
+          <div class="col-lg-12 text-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="230"
+              height="230"
+              fill="#2b8a3e"
+              viewBox="0 0 256 256"
+            >
+              <rect width="256" height="256" fill="none"></rect>
+              <path
+                d="M128,24A104,104,0,1,0,232,128,104.2,104.2,0,0,0,128,24Zm-18.3,98.3a8.1,8.1,0,0,1,0,11.4,8.2,8.2,0,0,1-11.4,0L88,123.3,77.7,133.7a8.2,8.2,0,0,1-11.4,0,8.1,8.1,0,0,1,0-11.4L76.7,112,66.3,101.7A8.1,8.1,0,0,1,77.7,90.3L88,100.7,98.3,90.3a8.1,8.1,0,0,1,11.4,11.4L99.3,112ZM128,192a12,12,0,1,1,12-12A12,12,0,0,1,128,192Zm61.7-69.7a8.1,8.1,0,0,1,0,11.4,8.2,8.2,0,0,1-11.4,0L168,123.3l-10.3,10.4a8.2,8.2,0,0,1-11.4,0,8.1,8.1,0,0,1,0-11.4L156.7,112l-10.4-10.3a8.1,8.1,0,0,1,11.4-11.4L168,100.7l10.3-10.4a8.1,8.1,0,0,1,11.4,11.4L179.3,112Z"
+              ></path>
+            </svg>
+            <p class="text-not-found">¡No se encontraron clientes!</p>
+          </div>
+        </ng-template>
+      </div>
+      <!-- Footer del modal -->
+      <div class="modal-footer">
+        <button
+          (click)="clearClientesBuscados()"
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal que permite ver los clientes inactivos  -->
+<div
+  class="modal fade"
+  id="clientesInactivos"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="clientesInactivosLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <!-- Cabecera del modal -->
+      <div class="modal-header">
+        <div class="col-lg-12">
+          <h3>Clientes inactivos</h3>
+        </div>
+      </div>
+      <!-- Cuerpo del modal -->
+      <div class="modal-body">
+        <div
+          class="col-lg-12 text-center"
+          *ngIf="clientesInactivos.length > 0; else noInactiveClients"
+        >
+          <div class="table-responsive-lg">
+            <table class="table table-bordered">
+              <thead class="table-dark">
+                <tr>
+                  <th>Nombre</th>
+                  <th>Teléfono</th>
+                  <th style="width: 20%">Dirección</th>
+                  <th>E-mail</th>
+                  <th *ngIf="authService.hasRole('ROLE_OPERADOR')">Opciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let cliente of clientesInactivos">
+                  <td>{{ cliente.nombre }} {{ cliente.apellido }}</td>
+                  <td>{{ cliente.telefono }}</td>
+                  <td>
+                    {{ cliente.direccion }}
+                  </td>
+                  <td>{{ cliente.email }}</td>
+                  <td>
+                    <button
+                      *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                      class="btn btn-danger"
+                      (click)="reintegrarCliente(cliente)"
+                      data-bs-dismiss="modal"
+                    >
+                      Reintegrar cliente
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <ng-template #noInactiveClients>
+          <div class="col-lg-12 text-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="230"
+              height="230"
+              fill="#2b8a3e"
+              viewBox="0 0 256 256"
+            >
+              <rect width="256" height="256" fill="none"></rect>
+              <path
+                d="M128,24A104,104,0,1,0,232,128,104.2,104.2,0,0,0,128,24Zm-18.3,98.3a8.1,8.1,0,0,1,0,11.4,8.2,8.2,0,0,1-11.4,0L88,123.3,77.7,133.7a8.2,8.2,0,0,1-11.4,0,8.1,8.1,0,0,1,0-11.4L76.7,112,66.3,101.7A8.1,8.1,0,0,1,77.7,90.3L88,100.7,98.3,90.3a8.1,8.1,0,0,1,11.4,11.4L99.3,112ZM128,192a12,12,0,1,1,12-12A12,12,0,0,1,128,192Zm61.7-69.7a8.1,8.1,0,0,1,0,11.4,8.2,8.2,0,0,1-11.4,0L168,123.3l-10.3,10.4a8.2,8.2,0,0,1-11.4,0,8.1,8.1,0,0,1,0-11.4L156.7,112l-10.4-10.3a8.1,8.1,0,0,1,11.4-11.4L168,100.7l10.3-10.4a8.1,8.1,0,0,1,11.4,11.4L179.3,112Z"
+              ></path>
+            </svg>
+            <p class="text-not-found">¡No se encontraron clientes inactivos!</p>
+          </div>
+        </ng-template>
+      </div>
+      <!-- Footer del modal -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

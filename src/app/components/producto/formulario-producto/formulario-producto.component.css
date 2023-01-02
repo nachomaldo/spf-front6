@@ -1,0 +1,42 @@
+#main {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background-color: #fff;
+    padding-top: 20px;
+    padding-left: 80px;
+    padding-right: 80px;
+}
+
+#title {
+    padding-bottom: 15px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #2b8a3e;
+}
+
+.new_product-container {
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.form-control.ng-touched.ng-invalid {
+    border: 2px solid red;
+}
+
+.form-control.ng-valid {
+    border: 2px solid green;
+}
+
+.btn-save-modify {
+    margin-right: 15px;
+}
+
+.row {
+    justify-content: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

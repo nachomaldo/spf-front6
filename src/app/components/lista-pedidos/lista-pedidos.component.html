@@ -1,0 +1,257 @@
+<div class="header">
+  <app-navbar></app-navbar>
+
+  <div class="title" id="no-padding">
+    <h1>Pedidos del día</h1>
+
+    <a
+      *ngIf="authService.hasRole('ROLE_OPERADOR')"
+      href="#"
+      class="button-link"
+      [routerLink]="['seleccion-categoria']"
+      >Nuevo pedido</a
+    >
+  </div>
+
+  <!-- <div class="subtitle">
+    <h5>El máximo de pedidos por día actual es de {{ limitePedidos }}.</h5>
+    <a
+      data-bs-toggle="modal"
+      data-bs-target="#maximoPedidos"
+      *ngIf="authService.hasRole('ROLE_OPERADOR')"
+      href="#"
+      class="update-link"
+      >Cambiar máximo.</a
+    >
+  </div> -->
+</div>
+
+<div class="container mt-4" id="main">
+  <div class="row">
+    <div class="col-lg-12 text-center">
+      <div class="table-responsive-lg">
+        <table class="table table-bordered">
+          <thead class="table-dark">
+            <tr>
+              <th>Nombre del receptor</th>
+              <th>Fecha</th>
+              <th>Dirección de reparto</th>
+              <th>Total</th>
+              <th>Pendiente</th>
+              <th>Productos</th>
+              <th>Opciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let pedido of pedidosDelDia">
+              <td>{{ pedido.nombreDelReceptor }}</td>
+              <td>{{ pedido.fecha }}</td>
+              <td>{{ pedido.direccionDeReparto }}</td>
+              <td>{{ pedido.total | currency : "CLP" : "symbol-narrow" }}</td>
+              <td *ngIf="pedido.pendiente; else pedidoEntregado">
+                Entrega pendiente
+              </td>
+              <ng-template #pedidoEntregado>
+                <td>Pedido entregado</td>
+              </ng-template>
+              <td>
+                <button
+                  class="btn btn-info"
+                  data-bs-dismiss="modal"
+                  data-bs-toggle="modal"
+                  data-bs-target="#productosPedidosCliente"
+                  (click)="getProductosPedido(pedido.productos)"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="#fff"
+                    viewBox="0 0 256 256"
+                  >
+                    <rect width="256" height="256" fill="none"></rect>
+                    <path
+                      d="M247.3,124.8c-.3-.8-8.8-19.6-27.6-38.5C194.6,61.3,162.9,48,128,48S61.4,61.3,36.3,86.3C17.5,105.2,9,124,8.7,124.8a7.9,7.9,0,0,0,0,6.4c.3.8,8.8,19.6,27.6,38.5C61.4,194.7,93.1,208,128,208s66.6-13.3,91.7-38.3c18.8-18.9,27.3-37.7,27.6-38.5A7.9,7.9,0,0,0,247.3,124.8ZM128,92a36,36,0,1,1-36,36A36,36,0,0,1,128,92Z"
+                    ></path>
+                  </svg>
+                </button>
+              </td>
+              <td class="flex-cell">
+                <button
+                  class="btn btn-success"
+                  (click)="modificarEstadoEntrega(pedido)"
+                >
+                  Modificar entrega
+                </button>
+
+                <button
+                  *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                  class="btn btn-success"
+                  [routerLink]="['/modificar-pedido', pedido.idPedido]"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="#fff"
+                    viewBox="0 0 256 256"
+                  >
+                    <rect width="256" height="256" fill="none"></rect>
+                    <path
+                      d="M224,120v88a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32h88a8,8,0,0,1,0,16H48V208H208V120a8,8,0,0,1,16,0Zm5.7-50.3-96,96A8.1,8.1,0,0,1,128,168H96a8,8,0,0,1-8-8V128a8.1,8.1,0,0,1,2.3-5.7l96-96a8.1,8.1,0,0,1,11.4,0l32,32A8.1,8.1,0,0,1,229.7,69.7Zm-17-5.7L192,43.3,179.3,56,200,76.7Z"
+                    ></path>
+                  </svg>
+                </button>
+                <button
+                  *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                  class="btn btn-danger"
+                  (click)="eliminarPedido(pedido.idPedido)"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="#fff"
+                    viewBox="0 0 256 256"
+                  >
+                    <rect width="256" height="256" fill="none"></rect>
+                    <path
+                      d="M216,48H176V40a24.1,24.1,0,0,0-24-24H104A24.1,24.1,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM112,168a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm0-120H96V40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8Z"
+                    ></path>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal que permite ver los productos de los pedidos -->
+<div
+  class="modal fade"
+  id="productosPedidosCliente"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="productosPedidosClienteLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <!-- Cabecera del modal -->
+      <div class="modal-header">
+        <div class="col-lg-12">
+          <h3>Productos del pedido</h3>
+        </div>
+      </div>
+      <!-- Cuerpo del modal -->
+      <div class="modal-body">
+        <div
+          class="col-lg-12 text-center"
+          *ngIf="getProductosPedido.length > 0"
+        >
+          <div class="table-responsive-lg">
+            <table class="table table-bordered">
+              <thead class="table-dark">
+                <tr>
+                  <th>Imagen</th>
+                  <th>Nombre</th>
+                  <th>Precio unitario</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let producto of productosPedido">
+                  <td>
+                    <img
+                      [src]="'data:image/png;base64,' + producto.imageBytes"
+                      class="product-img"
+                    />
+                  </td>
+                  <td>{{ producto.nombre }}</td>
+                  <td>
+                    {{ producto.precio | currency : "CLP" : "symbol-narrow" }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- Footer del modal -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal que permite cambiar el máximo de pedidos diarios -->
+<!-- <div
+  class="modal fade"
+  id="maximoPedidos"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="maximoPedidosLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content"> -->
+      <!-- Cabecera del modal -->
+      <!-- <div class="modal-header">
+        <div class="col-lg-12">
+          <h3>Máximo de pedidos diarios</h3>
+          <h5>Actualice el máximo de pedidos diarios permitidos.</h5>
+        </div>
+      </div> -->
+      <!-- Cuerpo del modal -->
+      <!-- <div class="modal-body">
+        <form>
+          <span class="input-group-text">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="#fff"
+              viewBox="0 0 256 256"
+            >
+              <rect width="256" height="256" fill="none"></rect>
+              <path
+                d="M224,88H175.4l8.5-46.6a8,8,0,0,0-15.8-2.8l-9,49.4H111.4l8.5-46.6a8,8,0,1,0-15.8-2.8L95.1,88H43.6a8,8,0,1,0,0,16H92.2l-8.7,48H32a8,8,0,0,0,0,16H80.6l-8.5,46.6a8,8,0,0,0,6.5,9.3H80a8,8,0,0,0,7.9-6.6l9-49.4h47.7l-8.5,46.6a8,8,0,0,0,6.5,9.3H144a8,8,0,0,0,7.9-6.6l9-49.4h51.5a8,8,0,0,0,0-16H163.8l8.7-48H224a8,8,0,0,0,0-16Zm-76.5,64H99.8l8.7-48h47.7Z"
+              ></path>
+            </svg>
+          </span>
+          <input
+            type="number"
+            class="form-control"
+            name="max-pedidos"
+            id="max-pedidos"
+            ngModel
+            #maximoPedidos="ngModel"
+            required
+            max="100"
+            placeholder="Ingrese el valor aquí."
+          />
+          <button
+            (click)="actualizarMaximo(maximoPedidos.value)"
+            [disabled]="maximoPedidos.invalid"
+            class="btn btn-success ms-2"
+            type="submit"
+            data-bs-dismiss="modal"
+          >
+            Actualizar
+          </button>
+        </form>
+      </div> -->
+      <!-- Footer del modal -->
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div> -->

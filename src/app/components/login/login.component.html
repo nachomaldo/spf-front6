@@ -1,0 +1,124 @@
+<div class="container">
+  <!-- Header -->
+  <div class="row" id="title">
+    <div class="col-lg-12 text-center">
+      <h2>{{ title }}</h2>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="row">
+    <div class="col-lg-12 body">
+      <form>
+        <!-- Usuario -->
+        <div class="row mb-4">
+          <div class="col-lg-12 text-left">
+            <div class="form-group">
+              <div class="input-group">
+                <span class="input-group-text">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="#fff"
+                    viewBox="0 0 256 256"
+                  >
+                    <rect width="256" height="256" fill="none"></rect>
+                    <path
+                      d="M231.9,212a120.7,120.7,0,0,0-67.1-54.2,72,72,0,1,0-73.6,0A120.7,120.7,0,0,0,24.1,212a7.7,7.7,0,0,0,0,8,7.8,7.8,0,0,0,6.9,4H225a7.8,7.8,0,0,0,6.9-4A7.7,7.7,0,0,0,231.9,212Z"
+                    ></path>
+                  </svg>
+                </span>
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  class="form-control"
+                  ngModel
+                  #username="ngModel"
+                  [(ngModel)]="usuario.username"
+                  required
+                  maxlength="20"
+                  placeholder="Usuario"
+                />
+              </div>
+
+              <!-- Manejo de errores -->
+              <div
+                *ngIf="username.invalid && (username.dirty || username.touched)"
+                class="col-lg-12"
+              >
+                <div *ngIf="username.errors?.['required']">
+                  <small class="text-danger"
+                    >Debe ingresar su nombre de usuario.</small
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="row">
+          <div class="col-lg-12 text-left">
+            <div class="form-group">
+              <div class="input-group">
+                <span class="input-group-text">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="#fff"
+                    viewBox="0 0 256 256"
+                  >
+                    <rect width="256" height="256" fill="none"></rect>
+                    <path
+                      d="M160,16A80.1,80.1,0,0,0,83.9,120.8L26.3,178.3A8.1,8.1,0,0,0,24,184v40a8,8,0,0,0,8,8H72a8,8,0,0,0,8-8V208H96a8,8,0,0,0,8-8V184h16a8.1,8.1,0,0,0,5.7-2.3l9.5-9.6A80,80,0,1,0,160,16Zm20,76a16,16,0,1,1,16-16A16,16,0,0,1,180,92Z"
+                    ></path>
+                  </svg>
+                </span>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  class="form-control"
+                  ngModel
+                  #password="ngModel"
+                  [(ngModel)]="usuario.password"
+                  required
+                  placeholder="Contraseña"
+                />
+              </div>
+
+              <!-- Manejo de errores -->
+              <div
+                *ngIf="password.invalid && (password.dirty || password.touched)"
+                class="col-lg-12"
+              >
+                <div *ngIf="username.errors?.['required']">
+                  <small class="text-danger"
+                    >Debe ingresar su contraseña.</small
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Login button -->
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <button
+              (click)="login()"
+              [disabled]="username.invalid || password.invalid"
+              class="btn btn-success"
+              type="submit"
+            >
+              Ingresar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,263 @@
+<div class="header">
+  <app-navbar> </app-navbar>
+</div>
+
+<div id="main">
+  <!-- Título -->
+  <div class="row" id="title">
+    <div class="col-lg-10">
+      <h2 *ngIf="!cliente.idCliente; else updateTitleText">Registrar cliente</h2>
+      <ng-template #updateTitleText>
+        <h2>Modificar cliente</h2>
+      </ng-template>
+      <h5 *ngIf="!cliente.idCliente; else updateSubtitleText">
+        Ingrese la información necesaria para registrar al cliente.
+      </h5>
+
+      <ng-template #updateSubtitleText>
+        <h5>Actualice la información del cliente.</h5>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="new_client-container">
+    <div class="row">
+      <form>
+        <div class="row col-lg-12">
+          <!-- Nombre del cliente -->
+          <div class="col-lg-4">
+            <div class="form-group">
+              <label for="nombre-cliente" class="form-label">Nombre:</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nombre-cliente"
+                  name="nombre-cliente"
+                  ngModel
+                  [(ngModel)]="cliente.nombre"
+                  #nombreCliente="ngModel"
+                  required
+                  minlength="3"
+                  maxlength="30"
+                />
+                <div
+                  *ngIf="
+                    nombreCliente?.invalid &&
+                    (nombreCliente?.touched || nombreCliente?.dirty)
+                  "
+                  class="col-lg-12"
+                >
+                  <div *ngIf="nombreCliente.errors?.['required']">
+                    <small class="text-danger"
+                      >Se debe ingresar el nombre del cliente.</small
+                    >
+                  </div>
+                  <div *ngIf="nombreCliente.errors?.['maxlength']">
+                    <small class="text-danger"
+                      >El nombre no puede contener más de 30 caracteres.</small
+                    >
+                  </div>
+                  <div *ngIf="nombreCliente.errors?.['minlength']">
+                    <small class="text-danger"
+                      >El nombre no puede contener menos de 3 caracteres.</small
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Apellido del cliente -->
+          <div class="col-lg-4">
+            <div class="form-group">
+              <label for="apellido-cliente" class="form-label">Apellido:</label>
+              <div class="input-group">
+                <input
+                  id="apellido-cliente"
+                  name="apellido-cliente"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="cliente.apellido"
+                  ngModel
+                  #apellidoCliente="ngModel"
+                  required
+                  minlength="3"
+                  maxlength="30"
+                />
+                <div
+                  *ngIf="
+                    apellidoCliente?.invalid &&
+                    (apellidoCliente?.touched || apellidoCliente?.dirty)
+                  "
+                  class="col-lg-12"
+                >
+                  <div *ngIf="apellidoCliente.errors?.['required']">
+                    <small class="text-danger"
+                      >Se debe ingresar el apellido del cliente.</small
+                    >
+                  </div>
+                  <div *ngIf="apellidoCliente.errors?.['minlength']">
+                    <small class="text-danger"
+                      >El apellido del cliente debe tener más de 3
+                      caracteres.</small
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Teléfono del cliente -->
+          <div class="col-lg-4">
+            <div class="form-group">
+              <label for="telefono-cliente" class="form-label">Teléfono:</label>
+              <div class="input-group">
+                <input
+                  id="telefono-cliente"
+                  name="telefono-cliente"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="cliente.telefono"
+                  ngModel
+                  #telefonoCliente="ngModel"
+                  required
+                  minlength="8"
+                  maxlength="8"
+                  pattern="^[0-9]+$"
+                />
+                <div
+                  *ngIf="
+                    telefonoCliente?.invalid &&
+                    (telefonoCliente?.touched || telefonoCliente?.dirty)
+                  "
+                  class="col-lg-12"
+                >
+                  <div *ngIf="telefonoCliente.errors?.['required']">
+                    <small class="text-danger"
+                      >Se debe ingresar el teléfono del cliente.</small
+                    >
+                  </div>
+                  <div *ngIf="telefonoCliente.errors?.['pattern']">
+                    <small class="text-danger">Caracteres inválidos...</small>
+                  </div>
+                  <div
+                    *ngIf="telefonoCliente.errors?.['minlength'] && !telefonoCliente.errors?.['pattern']"
+                  >
+                    <small class="text-danger"
+                      >Se deben ingresar al menos 8 dígitos.</small
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dirección del cliente -->
+          <div class="col-lg-7">
+            <div class="form-group">
+              <label for="direccion-cliente" class="form-label"
+                >Direccion:</label
+              >
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="direccion-cliente"
+                  name="direccion-cliente"
+                  ngModel
+                  [(ngModel)]="cliente.direccion"
+                  #direccionCliente="ngModel"
+                  required
+                  maxlength="80"
+                />
+                <div
+                  *ngIf="
+                    direccionCliente?.invalid &&
+                    (direccionCliente?.touched || direccionCliente?.dirty)
+                  "
+                  class="col-lg-12"
+                >
+                  <div *ngIf="direccionCliente.errors?.['required']">
+                    <small class="text-danger"
+                      >Se debe ingresar la dirección del cliente.</small
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- E-mail del cliente -->
+          <div class="col-lg-5">
+            <div class="form-group">
+              <label for="email-cliente" class="form-label">E-mail:</label>
+              <div class="input-group">
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email-cliente"
+                  name="email-cliente"
+                  ngModel
+                  [(ngModel)]="cliente.email"
+                  #emailCliente="ngModel"
+                  required
+                />
+                <div
+                  *ngIf="
+                    emailCliente?.invalid &&
+                    (emailCliente?.touched || emailCliente?.dirty)
+                  "
+                  class="col-lg-12"
+                >
+                  <small class="text-danger"
+                    >Se debe ingresar el e-mail del cliente!</small
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-12">
+              <button
+              *ngIf="!cliente.idCliente; else updateButton"
+                (click)="registerClient()"
+                class="btn btn-success btn-save-modify mt-4"
+                [disabled]="
+                  nombreCliente.invalid ||
+                  apellidoCliente.invalid ||
+                  telefonoCliente.invalid ||
+                  direccionCliente.invalid ||
+                  emailCliente.invalid 
+                "
+              >
+                Registrar cliente
+              </button>
+
+              <!-- Si se desea actualizar una deuda, se muestra este botón -->
+            <ng-template #updateButton>
+                <button
+                  [disabled]="
+                  nombreCliente.invalid ||
+                  apellidoCliente.invalid ||
+                  telefonoCliente.invalid ||
+                  direccionCliente.invalid ||
+                  emailCliente.invalid 
+                  "
+                  type="submit"
+                  class="btn btn-success btn-save-modify mt-4"
+                  (click)="updateCliente()"
+                >
+                  Guardar cambios
+                </button>
+              </ng-template>
+  
+              <button class="btn btn-success mt-4" routerLink="../../clientes/0">
+                Volver
+              </button>
+            </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

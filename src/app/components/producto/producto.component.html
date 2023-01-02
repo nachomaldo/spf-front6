@@ -1,0 +1,396 @@
+<div class="header">
+  <app-navbar></app-navbar>
+
+  <div class="title">
+    <h1>Productos</h1>
+    <div class="title-options">
+      <a
+        *ngIf="authService.hasRole('ROLE_OPERADOR')"
+        href="#"
+        class="button-link me-3"
+        routerLink="/nuevo-producto"
+        >Crear producto</a
+      >
+
+      <button
+        class="button-link"
+        *ngIf="authService.hasRole('ROLE_OPERADOR')"
+        (click)="loadInactiveProducts()"
+        data-bs-toggle="modal"
+        data-bs-target="#productosInactivos"
+      >
+        Productos Inactivos
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Interfaz que permite buscar productos por nombre -->
+<div class="container search_product-container">
+  <form>
+    <div class="form-group">
+      <label for="busqueda-productos" class="form-label"
+        >Nombre del producto:</label
+      >
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          id="busqueda-productos"
+          name="busqueda-productos"
+          ngModel
+          #nombreProductoBuscado="ngModel"
+          required
+          pattern="^[A-Za-z\s]*$"
+          placeholder="Ingrese el nombre del producto a buscar."
+        />
+        <div
+          *ngIf="
+            nombreProductoBuscado?.invalid &&
+            (nombreProductoBuscado?.touched || nombreProductoBuscado?.dirty)
+          "
+          class="col-lg-12"
+        >
+          <div *ngIf="nombreProductoBuscado.errors?.['required']">
+            <small class="text-danger"
+              >Se debe ingresar el nombre del producto.</small
+            >
+          </div>
+          <div *ngIf="nombreProductoBuscado.errors?.['pattern']">
+            <small class="text-danger">Caracteres inválidos.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button
+      [disabled]="nombreProductoBuscado.invalid"
+      type="submit"
+      class="btn btn-success ms-3 search-button"
+      (click)="searchProducts(nombreProductoBuscado.value)"
+      [ngClass]="
+        nombreProductoBuscado?.invalid &&
+        (nombreProductoBuscado?.touched || nombreProductoBuscado?.dirty)
+          ? 'margin-bottom'
+          : ''
+      "
+      data-bs-toggle="modal"
+      data-bs-target="#productosBuscados"
+    >
+      Buscar producto
+    </button>
+  </form>
+</div>
+
+<!-- Tabla que muestra el listado de productos -->
+<div class="container" id="main">
+  <div class="row">
+    <div class="col-lg-12 text-center">
+      <div class="table-responsive-lg">
+        <table class="table table-bordered">
+          <thead class="table-dark">
+            <tr>
+              <th>Imagen</th>
+              <th>Nombre</th>
+              <th>Precio unitario</th>
+              <th>Stock</th>
+              <th *ngIf="authService.hasRole('ROLE_OPERADOR')">Opciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let producto of productos">
+              <td>
+                <img [src]="'data:image/png;base64,'+producto.imageBytes"
+                      class="product-img"
+                    />
+              </td>
+              <td>{{ producto.nombre }}</td>
+              <td>
+                {{ producto.precio | currency : "CLP" : "symbol-narrow" }}
+              </td>
+              <td>{{ producto.stock }}</td>
+              <td
+                *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                class="flex-cell"
+              >
+                <button
+                  *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                  class="btn btn-success me-2"
+                  [routerLink]="['../../modificar-producto', producto.codigo]"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="#fff"
+                    viewBox="0 0 256 256"
+                  >
+                    <rect width="256" height="256" fill="none"></rect>
+                    <path
+                      d="M224,120v88a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32h88a8,8,0,0,1,0,16H48V208H208V120a8,8,0,0,1,16,0Zm5.7-50.3-96,96A8.1,8.1,0,0,1,128,168H96a8,8,0,0,1-8-8V128a8.1,8.1,0,0,1,2.3-5.7l96-96a8.1,8.1,0,0,1,11.4,0l32,32A8.1,8.1,0,0,1,229.7,69.7Zm-17-5.7L192,43.3,179.3,56,200,76.7Z"
+                    ></path>
+                  </svg>
+                </button>
+                <button
+                  *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                  class="btn btn-danger"
+                  (click)="eliminarProducto(producto)"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="#fff"
+                    viewBox="0 0 256 256"
+                  >
+                    <rect width="256" height="256" fill="none"></rect>
+                    <path
+                      d="M216,48H176V40a24.1,24.1,0,0,0-24-24H104A24.1,24.1,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM112,168a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm0-120H96V40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8Z"
+                    ></path>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <app-paginador
+          *ngIf="paginador && route"
+          [paginador]="paginador"
+          [route]="route"
+        ></app-paginador>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal que permite ver los productos buscados  -->
+<div
+  class="modal fade"
+  id="productosBuscados"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="productosBuscadosLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <!-- Cabecera del modal -->
+      <div class="modal-header">
+        <div class="col-lg-12">
+          <h3>Resultados de la búsqueda</h3>
+        </div>
+      </div>
+      <!-- Cuerpo del modal -->
+      <div class="modal-body">
+        <div
+          class="col-lg-12 text-center"
+          *ngIf="productosBuscados.length > 0; else noProductsFound"
+        >
+          <div class="table-responsive-lg">
+            <table class="table table-bordered">
+              <thead class="table-dark">
+                <tr>
+                  <th>Imagen</th>
+                  <th>Nombre</th>
+                  <th>Precio unitario</th>
+                  <th>Stock</th>
+                  <th *ngIf="authService.hasRole('ROLE_OPERADOR')">Opciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let producto of productosBuscados">
+                  <td>
+                    <img [src]="'data:image/png;base64,'+producto.imageBytes"
+                      class="product-img"
+                    />
+                  </td>
+                  <td>{{ producto.nombre }}</td>
+                  <td>
+                    {{ producto.precio | currency : "CLP" : "symbol-narrow" }}
+                  </td>
+                  <td>{{ producto.stock }}</td>
+                  <td
+                    *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                    class="flex-cell"
+                  >
+                    <button
+                      *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                      class="btn btn-success me-2"
+                      [routerLink]="[
+                        '../../modificar-producto',
+                        producto.codigo
+                      ]"
+                      data-bs-dismiss="modal"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        fill="#fff"
+                        viewBox="0 0 256 256"
+                      >
+                        <rect width="256" height="256" fill="none"></rect>
+                        <path
+                          d="M224,120v88a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32h88a8,8,0,0,1,0,16H48V208H208V120a8,8,0,0,1,16,0Zm5.7-50.3-96,96A8.1,8.1,0,0,1,128,168H96a8,8,0,0,1-8-8V128a8.1,8.1,0,0,1,2.3-5.7l96-96a8.1,8.1,0,0,1,11.4,0l32,32A8.1,8.1,0,0,1,229.7,69.7Zm-17-5.7L192,43.3,179.3,56,200,76.7Z"
+                        ></path>
+                      </svg>
+                    </button>
+                    <button
+                      *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                      class="btn btn-danger"
+                      (click)="eliminarProducto(producto)"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        fill="#fff"
+                        viewBox="0 0 256 256"
+                      >
+                        <rect width="256" height="256" fill="none"></rect>
+                        <path
+                          d="M216,48H176V40a24.1,24.1,0,0,0-24-24H104A24.1,24.1,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM112,168a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm0-120H96V40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8Z"
+                        ></path>
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <ng-template #noProductsFound>
+          <div class="col-lg-12 text-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="230"
+              height="230"
+              fill="#2b8a3e"
+              viewBox="0 0 256 256"
+            >
+              <rect width="256" height="256" fill="none"></rect>
+              <path
+                d="M128,24A104,104,0,1,0,232,128,104.2,104.2,0,0,0,128,24Zm-18.3,98.3a8.1,8.1,0,0,1,0,11.4,8.2,8.2,0,0,1-11.4,0L88,123.3,77.7,133.7a8.2,8.2,0,0,1-11.4,0,8.1,8.1,0,0,1,0-11.4L76.7,112,66.3,101.7A8.1,8.1,0,0,1,77.7,90.3L88,100.7,98.3,90.3a8.1,8.1,0,0,1,11.4,11.4L99.3,112ZM128,192a12,12,0,1,1,12-12A12,12,0,0,1,128,192Zm61.7-69.7a8.1,8.1,0,0,1,0,11.4,8.2,8.2,0,0,1-11.4,0L168,123.3l-10.3,10.4a8.2,8.2,0,0,1-11.4,0,8.1,8.1,0,0,1,0-11.4L156.7,112l-10.4-10.3a8.1,8.1,0,0,1,11.4-11.4L168,100.7l10.3-10.4a8.1,8.1,0,0,1,11.4,11.4L179.3,112Z"
+              ></path>
+            </svg>
+            <p class="text-not-found">¡No se encontraron productos!</p>
+          </div>
+        </ng-template>
+      </div>
+      <!-- Footer del modal -->
+      <div class="modal-footer">
+        <button
+          (click)="clearproductosBuscados()"
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal que permite ver los productos inactivos  -->
+<div
+  class="modal fade"
+  id="productosInactivos"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="productosInactivosLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <!-- Cabecera del modal -->
+      <div class="modal-header">
+        <div class="col-lg-12">
+          <h3>Productos inactivos</h3>
+        </div>
+      </div>
+      <!-- Cuerpo del modal -->
+      <div class="modal-body">
+        <div
+          class="col-lg-12 text-center"
+          *ngIf="productosInactivos.length > 0; else noInactiveProducts"
+        >
+          <div class="table-responsive-lg">
+            <table class="table table-bordered">
+              <thead class="table-dark">
+                <tr>
+                  <th>Imagen</th>
+                  <th>Nombre</th>
+                  <th>Precio unitario</th>
+                  <th>Stock</th>
+                  <th *ngIf="authService.hasRole('ROLE_OPERADOR')">Opciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let producto of productosInactivos">
+                  <td>
+                    <!-- <img
+                      src="https://spf-backend.rj.r.appspot.com/api/productos/imagenes/image/{{
+                        producto.codigo
+                      }}"
+                      class="product-img"
+                    /> -->
+                    <img [src]="'data:image/png;base64,'+producto.imageBytes"
+                      class="product-img"
+                    />
+                   
+                  </td>
+                  <td>{{ producto.nombre }}</td>
+                  <td>
+                    {{ producto.precio | currency : "CLP" : "symbol-narrow" }}
+                  </td>
+                  <td>{{ producto.stock }}</td>
+                  <td
+                    *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                    class="flex-cell"
+                  >
+                    <button
+                      *ngIf="authService.hasRole('ROLE_OPERADOR')"
+                      class="btn btn-danger"
+                      (click)="reintegrarProducto(producto)"
+                      data-bs-dismiss="modal"
+                    >
+                      Reintegrar producto
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <ng-template #noInactiveProducts>
+          <div class="col-lg-12 text-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="230"
+              height="230"
+              fill="#2b8a3e"
+              viewBox="0 0 256 256"
+            >
+              <rect width="256" height="256" fill="none"></rect>
+              <path
+                d="M128,24A104,104,0,1,0,232,128,104.2,104.2,0,0,0,128,24Zm-18.3,98.3a8.1,8.1,0,0,1,0,11.4,8.2,8.2,0,0,1-11.4,0L88,123.3,77.7,133.7a8.2,8.2,0,0,1-11.4,0,8.1,8.1,0,0,1,0-11.4L76.7,112,66.3,101.7A8.1,8.1,0,0,1,77.7,90.3L88,100.7,98.3,90.3a8.1,8.1,0,0,1,11.4,11.4L99.3,112ZM128,192a12,12,0,1,1,12-12A12,12,0,0,1,128,192Zm61.7-69.7a8.1,8.1,0,0,1,0,11.4,8.2,8.2,0,0,1-11.4,0L168,123.3l-10.3,10.4a8.2,8.2,0,0,1-11.4,0,8.1,8.1,0,0,1,0-11.4L156.7,112l-10.4-10.3a8.1,8.1,0,0,1,11.4-11.4L168,100.7l10.3-10.4a8.1,8.1,0,0,1,11.4,11.4L179.3,112Z"
+              ></path>
+            </svg>
+            <p class="text-not-found">
+              ¡No se encontraron productos inactivos!
+            </p>
+          </div>
+        </ng-template>
+      </div>
+      <!-- Footer del modal -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

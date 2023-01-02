@@ -1,0 +1,192 @@
+<div class="header">
+  <app-navbar> </app-navbar>
+</div>
+
+<div id="main">
+  <!-- Título -->
+  <div class="row" id="title">
+    <div class="col-lg-10">
+      <h2>Deuda</h2>
+      <h5
+        *ngIf="
+          !deuda.idDeuda && clienteAsociado.idCliente !== 0;
+          else updateSubtitleText
+        "
+      >
+        Ingrese la información necesaria para registrar la deuda del cliente.
+        {{ clienteAsociado.nombre }} {{ clienteAsociado.apellido }}
+      </h5>
+
+      <ng-template #updateSubtitleText>
+        <h5>Actualice los datos solicitados para guardar la deuda.</h5>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Interfaz que permite registrar una nueva deuda al cliente -->
+  <div class="new_debt-container">
+    <div class="row">
+      <form>
+        <div class="row col-lg-12">
+          <!-- Fecha de la deuda -->
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label for="fecha-deuda" class="form-label">Fecha:</label>
+              <div class="input-group">
+                <input
+                  [ngStyle]="
+                    fechaDeuda.value < fechaActual
+                      ? { border: '2px solid red' }
+                      : {}
+                  "
+                  type="date"
+                  class="form-control"
+                  id="fecha-deuda"
+                  name="fecha-deuda"
+                  ngModel
+                  [(ngModel)]="deuda.fecha"
+                  #fechaDeuda="ngModel"
+                  required
+                />
+                <div
+                  *ngIf="
+                    fechaDeuda?.invalid &&
+                    (fechaDeuda?.touched || fechaDeuda?.dirty)
+                  "
+                  class="col-lg-12"
+                >
+                  <small class="text-danger"
+                    >Se debe ingresar la fecha del pedido.</small
+                  >
+                </div>
+                <div
+                  *ngIf="
+                    (fechaDeuda.touched || fechaDeuda.dirty) &&
+                    fechaDeuda.value < fechaActual
+                  "
+                  class="col-lg-12"
+                >
+                  <small class="text-danger"
+                    >No se puede seleccionar una fecha pasada.</small
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Monto de la deuda -->
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label for="monto-deuda" class="form-label">Monto:</label>
+              <div class="input-group">
+                <input
+                  id="monto-deuda"
+                  name="monto-deuda"
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="deuda.monto"
+                  ngModel
+                  #montoDeuda="ngModel"
+                  required
+                  pattern="^[0-9]+$"
+                />
+                <div
+                  *ngIf="
+                    montoDeuda?.invalid &&
+                    (montoDeuda?.touched || montoDeuda?.dirty)
+                  "
+                  class="col-lg-12"
+                >
+                  <div *ngIf="montoDeuda.errors?.['required']">
+                    <small class="text-danger"
+                      >Se debe ingresar el monto de la deuda.</small
+                    >
+                  </div>
+                  <div *ngIf="montoDeuda.errors?.['pattern']">
+                    <small class="text-danger">Caracteres inválidos</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Motivo de la deuda -->
+          <div class="col-lg-12">
+            <div class="form-group">
+              <label for="motivo-deuda" class="form-label">Motivo:</label>
+              <div class="input-group">
+                <textarea
+                  type="text"
+                  class="form-control"
+                  id="motivo-deuda"
+                  name="motivo-deuda"
+                  ngModel
+                  [(ngModel)]="deuda.motivo"
+                  #motivoDeuda="ngModel"
+                  required
+                  minlength="10"
+                  maxlength="300"
+                ></textarea>
+                <div
+                  *ngIf="
+                    motivoDeuda?.invalid &&
+                    (motivoDeuda?.touched || motivoDeuda?.dirty)
+                  "
+                  class="col-lg-12"
+                >
+                  <div *ngIf="motivoDeuda.errors?.['required']">
+                    <small class="text-danger"
+                      >Se debe ingresar el motivo de la deuda!</small
+                    >
+                  </div>
+                  <div *ngIf="motivoDeuda.errors?.['minlength']">
+                    <small class="text-danger"
+                      >El motivo debe contener al menos 10 caracteres.</small
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-12">
+            <button
+              *ngIf="!deuda.idDeuda; else updateButton"
+              (click)="registerDebt()"
+              class="btn btn-success btn-save-modify mt-4"
+              [disabled]="
+                fechaDeuda.invalid ||
+                montoDeuda.invalid ||
+                motivoDeuda.invalid ||
+                fechaDeuda.value < fechaActual
+              "
+            >
+              Registrar deuda
+            </button>
+
+            <!-- Si se desea actualizar una deuda, se muestra este botón -->
+            <ng-template #updateButton>
+              <button
+                [disabled]="
+                  fechaDeuda.invalid ||
+                  montoDeuda.invalid ||
+                  motivoDeuda.invalid ||
+                  fechaDeuda.value < fechaActual
+                "
+                type="submit"
+                class="btn btn-success btn-save-modify mt-4"
+                (click)="updateDeuda()"
+              >
+                Guardar cambios
+              </button>
+            </ng-template>
+
+            <button class="btn btn-success mt-4" routerLink="../../clientes/0">
+              Volver
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+.contenedor {
+  display: flex;
+  justify-content: center ;
+  flex-direction: column;
+  align-items: center;
+}
+
+.product-img {
+  max-width: 8rem;
+}
+
+.table {
+  width: 62.5rem;
+}
+
+.options {
+  text-align: center;
+}
+
+.icon {
+  max-width: 1.5rem;
+  max-height: 1.5rem;
+  fill: #fff;
+}
+
+.total_amount-container {
+  width: 62.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 2rem;
+}
+
+.total_amount {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.btn-container {
+  display: flex;
+  gap: 1rem;
+}
+
+.carrito-vacio {
+  gap: 1rem;
+}

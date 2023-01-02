@@ -1,0 +1,106 @@
+<div class="header">
+  <app-navbar></app-navbar>
+</div>
+
+<div class="title">
+  <h1>
+    {{ title }}
+  </h1>
+</div>
+
+<div *ngIf="carrito.length > 0; else noProductsInCart" class="contenedor">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Imagen</th>
+        <th>Nombre</th>
+        <th>Cantidad</th>
+        <th>Precio</th>
+        <th>Total producto</th>
+        <th>Opciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let producto of carrito">
+        <td>
+          <img
+            [src]="'data:image/png;base64,' + producto.imageBytes"
+            class="product-img"
+          />
+        </td>
+        <td>{{ producto.nombre }}</td>
+        <td>{{ producto.cantidad }}</td>
+        <td>{{ producto.precio | currency : "CLP" : "symbol-narrow" }}</td>
+        <td>
+          {{
+            producto.precio * producto.cantidad
+              | currency : "CLP" : "symbol-narrow"
+          }}
+        </td>
+        <td class="options">
+          <button
+            *ngIf="producto.cantidad > 0"
+            class="btn btn-danger"
+            (click)="removeProduct(producto)"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="192"
+              height="192"
+              fill="#000000"
+              viewBox="0 0 256 256"
+              class="icon"
+            >
+              <rect width="256" height="256" fill="none"></rect>
+              <path
+                d="M216,48H176V40a24.1,24.1,0,0,0-24-24H104A24.1,24.1,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM112,168a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm0-120H96V40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8Z"
+              ></path>
+            </svg>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="total_amount-container">
+    <p>Total pedido &rarr;</p>
+    <p class="total_amount">
+      {{ totalAmount | currency : "CLP" : "symbol-narrow" }}
+    </p>
+  </div>
+
+  <div class="btn-container">
+    <button class="btn btn-success" [routerLink]="['../nuevo-pedido']">
+      Agendar pedido
+    </button>
+    <button class="btn btn-success" (click)="compraRapida()">
+      Pedido rápido
+    </button>
+    <button class="btn btn-warning" [routerLink]="['/seleccion-categoria']">
+      &larr; Volver
+    </button>
+  </div>
+</div>
+
+<!-- Se muestra si no hay productos en el carrito -->
+<ng-template #noProductsInCart>
+  <div class="contenedor carrito-vacio">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="300"
+      height="300"
+      fill="#2b8a3e"
+      viewBox="0 0 256 256"
+    >
+      <rect width="256" height="256" fill="none"></rect>
+      <path
+        d="M223.9,65.4l-12.2,66.9A24,24,0,0,1,188.1,152H72.1l4.4,24H184a24,24,0,1,1-24,24,23.6,23.6,0,0,1,1.4-8H102.6a23.6,23.6,0,0,1,1.4,8,24,24,0,1,1-42.2-15.6L34.1,32H16a8,8,0,0,1,0-16H34.1A16,16,0,0,1,49.8,29.1L54.7,56H216a7.9,7.9,0,0,1,6.1,2.9A7.7,7.7,0,0,1,223.9,65.4Z"
+      ></path>
+    </svg>
+
+    <h2>¡No hay productos en tu carrito!</h2>
+
+    <button class="btn btn-success" [routerLink]="['/seleccion-categoria']">
+      Agregar productos &rarr;
+    </button>
+  </div>
+</ng-template>

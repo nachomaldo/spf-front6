@@ -1,0 +1,20 @@
+#navbar {
+  background-color: #2b8a3e;
+}
+
+#navbarNav {
+  display: flex;
+  justify-content: space-between;
+}
+
+.navbar-brand:link,
+.navbar-brand:visited,
+.nav-link:link,
+.nav-link:visited {
+  color: #fff;
+}
+
+.logout-link {
+  color: #fff;
+  cursor: pointer;
+}

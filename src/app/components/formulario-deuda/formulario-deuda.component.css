@@ -1,0 +1,18 @@
+#main {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background-color: #fff;
+    padding-top: 20px;
+    padding-left: 80px;
+    padding-right: 80px;
+}
+
+.btn-save-modify {
+    margin-right: 15px;
+}
+
+.new_client-container {
+    width: 100%;
+    margin-bottom: 2rem;
+}

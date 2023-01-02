@@ -1,0 +1,16 @@
+.contenedor {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  justify-items: center;
+}
+
+.card {
+  width: 18rem;
+}
+
+.category-icon {
+  width: 12rem;
+  height: 12rem;
+  fill: #2b8a3e;
+}
+

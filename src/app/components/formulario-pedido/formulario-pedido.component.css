@@ -1,0 +1,152 @@
+#btn-back {
+    margin-top: 40px;
+}
+
+#main {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background-color: #fff;
+    padding-top: 20px;
+    padding-left: 80px;
+    padding-right: 80px;
+}
+
+#no-patients {
+    font-size: 150px;
+    background-color: #fff;
+    color: #284b63;
+}
+
+#results {
+    margin-top: 20px;
+}
+
+#title {
+    padding-bottom: 15px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #2b8a3e;
+}
+
+.btn-icons {
+    width: 60%;
+    margin-right: 30px;
+}
+
+.btn-save-modify {
+    margin-right: 15px;
+}
+
+.form-control.ng-touched.ng-invalid {
+    border: 2px solid red;
+}
+
+.form-control.ng-valid {
+    border: 2px solid green;
+}
+
+.icon-row {
+    height: 200px;
+}
+
+.icons {
+    font-size: 160px;
+    background-color: #fff;
+    color: #284b63;
+    margin-left: 5.4vw;
+}
+
+.on-display-icon {
+    color: #284b63;
+    background-color: #fff;
+    font-size: 50px;
+}
+
+.on-display-text {
+    margin-bottom: 30px;
+    overflow-wrap: break-word;
+}
+
+.overflow {
+    overflow-wrap: break-word;
+}
+
+.table-dark {
+    background-color: #284b63;
+}
+
+.margin-top {
+    margin-top: 15px;
+    margin-left: 15px;
+}
+
+button, button:disabled, button:focus, button:hover {
+    background-color: #2b8a3e;
+    border-color: #2b8a3e;
+    cursor: pointer;
+}
+
+i {
+    background-color: #284b63;
+    color: #fff;
+}
+
+h2 {
+    padding-top: 40px;
+}
+
+span {
+    margin-bottom: 5px;
+    background-color: #284b63;
+    color: #fff;
+}
+
+.client-container {
+    border-bottom: 2px solid #2b8a3e;
+    display: flex;
+    flex-direction: column;
+    align-items : center;
+}
+
+.total_amount-row {
+    margin-top: 2rem;
+}
+
+.total_amount-container {
+    display: flex;
+    gap: 2rem;
+    justify-content: flex-start;
+}
+
+.total_amount {
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.select_client-container {
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+}
+
+.register_client-container {
+    width: 30%;
+    margin-bottom: 2rem;
+}
+
+.new_client-container {
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.found_clients-container {
+    width: 100%;
+}
+
+.center {
+    margin: 0 auto;
+}
+
+.green {
+    background-color: #2b8a3e;
+}

@@ -1,0 +1,283 @@
+<div class="header">
+  <app-navbar> </app-navbar>
+</div>
+
+<div id="main">
+  <!-- Título -->
+  <div class="row" id="title">
+    <div class="col-lg-10">
+      <h2 *ngIf="!producto.codigo; else titleText">Crear producto</h2>
+      <ng-template #titleText>
+        <h2>Actualizar producto</h2>
+      </ng-template>
+      <h5 *ngIf="!producto.codigo; else updateSubtitleText">
+        Ingrese la información necesaria para crear el producto.
+      </h5>
+
+      <ng-template #updateSubtitleText>
+        <h5>Actualice los datos solicitados para guardar el producto.</h5>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Formulario para crear el producto -->
+  <div class="new_product-container">
+    <div class="row">
+      <form>
+        <div class="row col-lg-10">
+          <!-- Nombre producto -->
+          <div class="col-lg-4 mb-4">
+            <div class="form-group">
+              <label for="nombre-producto" class="form-label">Nombre:</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nombre-producto"
+                  name="nombre-producto"
+                  ngModel
+                  [(ngModel)]="producto.nombre"
+                  #nombreProducto="ngModel"
+                  required
+                  min="3"
+                  max="50"
+                />
+                <div
+                  *ngIf="
+                    nombreProducto?.invalid &&
+                    (nombreProducto?.touched || nombreProducto?.dirty)
+                  "
+                  class="col-lg-12"
+                >
+                  <small class="text-danger"
+                    >Se debe ingresar el nombre del producto.</small
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Precio producto -->
+          <div class="col-lg-2">
+            <div class="form-group">
+              <label for="precio-producto" class="form-label">Precio:</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="precio-producto"
+                  name="precio-producto"
+                  ngModel
+                  [(ngModel)]="producto.precio"
+                  #precioProducto="ngModel"
+                  pattern="^[0-9]+$"
+                  required
+                />
+                <div
+                  *ngIf="
+                    precioProducto?.invalid &&
+                    (precioProducto?.touched || precioProducto?.dirty)
+                  "
+                  class="col-lg-12"
+                >
+                  <div *ngIf="precioProducto.errors?.['required']">
+                    <small class="text-danger"
+                      >Se debe ingresar el precio del producto.</small
+                    >
+                  </div>
+                  <div *ngIf="precioProducto.errors?.['pattern']">
+                    <small class="text-danger">Caracteres inválidos</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stock producto -->
+          <div class="col-lg-2">
+            <div class="form-group">
+              <label for="stock-producto" class="form-label"
+                >Stock disponible:</label
+              >
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="stock-producto"
+                  name="stock-producto"
+                  ngModel
+                  [(ngModel)]="producto.stock"
+                  #stockProducto="ngModel"
+                  pattern="^[0-9]+$"
+                  required
+                />
+                <div
+                  *ngIf="
+                    stockProducto?.invalid &&
+                    (stockProducto?.touched || stockProducto?.dirty)
+                  "
+                  class="col-lg-12"
+                >
+                  <div *ngIf="stockProducto.errors?.['required']">
+                    <small class="text-danger"
+                      >Se debe ingresar el stock disponible del producto.</small
+                    >
+                  </div>
+                  <div *ngIf="stockProducto.errors?.['pattern']">
+                    <small class="text-danger">Caracteres inválidos.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Categoría producto -->
+          <div class="col-lg-2">
+            <div class="form-group">
+              <label for="categoria-producto" class="form-label"
+                >Categoría:</label
+              >
+              <div class="input-group">
+                <select
+                  id="categoria-producto"
+                  name="categoria-producto"
+                  ngModel
+                  [(ngModel)]="producto.categoria"
+                  #categoriaProducto="ngModel"
+                  class="form-select"
+                  aria-label="Default select example"
+                  required
+                >
+                  <option value="alimento-perro">Alimentos para perros</option>
+                  <option value="alimento-gato">Alimentos para gatos</option>
+                  <option value="antiparasitario">
+                    Antiparasitarios y antipulgas
+                  </option>
+                  <option value="accesorios">Accesorios para mascotas</option>
+                  <option value="higiene">Higiene para mascotas</option>
+                </select>
+                <div
+                  *ngIf="
+                    categoriaProducto?.invalid &&
+                    (categoriaProducto?.touched || categoriaProducto?.dirty)
+                  "
+                  class="col-lg-12"
+                >
+                  <div *ngIf="categoriaProducto.errors?.['required']">
+                    <small class="text-danger"
+                      >Se debe ingresar la categoria del producto.</small
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Descripción producto -->
+          <div class="col-lg-10 mb-4">
+            <div class="form-group">
+              <label for="descripcion-producto" class="form-label"
+                >Descripción:</label
+              >
+              <div class="input-group">
+                <textarea
+                  type="text"
+                  class="form-control"
+                  id="descripcion-producto"
+                  name="descripcion-producto"
+                  ngModel
+                  [(ngModel)]="producto.descripcion"
+                  #descripcionProducto="ngModel"
+                  required
+                  minlength="10"
+                  maxlength="300"
+                ></textarea>
+                <div
+                  *ngIf="
+                    descripcionProducto?.invalid &&
+                    (descripcionProducto?.touched || descripcionProducto?.dirty)
+                  "
+                  class="col-lg-12"
+                >
+                  <div *ngIf="descripcionProducto.errors?.['required']">
+                    <small class="text-danger"
+                      >Se debe ingresar la descripción del producto.</small
+                    >
+                  </div>
+
+                  <div *ngIf="descripcionProducto.errors?.['minlength']">
+                    <small class="text-danger"
+                      >La descripción debe contener un mínimo de 10
+                      caracteres.</small
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Imagen del producto -->
+          <div class="col-lg-10 mb-5">
+            <div class="form-group">
+              <label for="imagen-producto" class="form-label"
+                >Imagen del producto:</label
+              >
+              <div class="input-group">
+                <input
+                  (change)="assignImage($event)"
+                  type="file"
+                  class="form-control"
+                  id="imagen-producto"
+                  name="imagen-producto"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row col-lg-10">
+          <div class="col-lg-10">
+            <!-- Si se desea crear un pedido, se muestra este botón -->
+            <button
+              [disabled]="
+                nombreProducto.invalid ||
+                precioProducto.invalid ||
+                stockProducto.invalid ||
+                categoriaProducto.invalid ||
+                descripcionProducto.invalid
+              "
+              type="submit"
+              class="btn btn-success btn-save-modify mb-5"
+              *ngIf="!producto.codigo; else updateButton"
+              (click)="crearProducto()"
+            >
+              Guardar producto
+            </button>
+
+            <!-- Si se desea actualizar un pedido, se muestra este botón -->
+            <ng-template #updateButton>
+              <button
+                [disabled]="
+                  nombreProducto.invalid ||
+                  precioProducto.invalid ||
+                  stockProducto.invalid ||
+                  categoriaProducto.invalid ||
+                  descripcionProducto.invalid
+                "
+                type="submit"
+                class="btn btn-success btn-save-modify mb-5"
+                (click)="actualizarProducto()"
+              >
+                Guardar cambios
+              </button>
+            </ng-template>
+
+            <button class="btn btn-success mb-5" routerLink="/productos/0">
+              Volver
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

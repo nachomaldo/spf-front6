@@ -1,0 +1,77 @@
+.title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.contenedor {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.card {
+  width: 18rem;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-text {
+  font-size: 0.875rem;
+}
+
+.price {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.product-img {
+  max-width: 100%;
+}
+
+.form-container {
+  display: flex;
+  gap: 1rem;
+}
+
+.amount {
+  width: 3rem;
+}
+
+.icon {
+  max-width: 1.5rem;
+  max-height: 1.5rem;
+  fill: #fff;
+}
+
+.cont {
+  display: flex;
+  justify-content: center;
+}
+
+.no-products {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.text-not-found {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* To remove arrows from input type number */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
