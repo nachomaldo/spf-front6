@@ -11,7 +11,7 @@ import swal from 'sweetalert2';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
-  title: string = 'Sistema de pedidos facilito';
+  title: string = 'Sistema de Pedidos Facilito';
 
   usuario!: Usuario;
 
