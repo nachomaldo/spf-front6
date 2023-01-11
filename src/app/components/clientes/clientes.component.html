@@ -254,7 +254,7 @@
                   <td>{{ pedido.nombreDelReceptor }}</td>
                   <td>{{ pedido.direccionDeReparto }}</td>
                   <td>{{ pedido.fecha | date: 'dd/MM/yyyy'}}</td>
-                  <td>{{ pedido.total }}</td>
+                  <td>{{ pedido.total | currency : "CLP" : "symbol-narrow" }}</td>
                   <td>
                     {{
                       pedido.pendiente
