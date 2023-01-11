@@ -32,7 +32,7 @@ export class NavbarComponent implements OnInit {
 
           swal.fire(
             `Cierre de sesión`,
-            'Has cerrado sesión correctamente.',
+            'Ha cerrado sesión correctamente.',
             'success'
           );
           this.router.navigate(['/login']);

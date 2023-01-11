@@ -27,8 +27,11 @@ export class FormularioPedidoComponent implements OnInit {
   // Para guardar el listado de productos del pedido
   carrito: Producto[] = new Array();
 
-  // Para manejar la búsqueda o creación de clientes
+  // Para la creación de clientes
   cliente: Cliente = new Cliente();
+
+  // Para manejar la búsqueda de un cliente
+  nombreCliente: string = "";
 
   // Total del pedido
   totalAmount: number = 0;
@@ -82,6 +85,7 @@ export class FormularioPedidoComponent implements OnInit {
   showNewClientInterface() {
     this.newClient = !this.newClient;
     this.registeredClient = false;
+    this.foundClients = [];
   }
 
   // Crear un nuevo cliente
@@ -104,11 +108,12 @@ export class FormularioPedidoComponent implements OnInit {
     this.clienteService.buscarCliente(name).subscribe((res) => {
         this.foundClients = res as Cliente[];
     }, error => {
-      console.log(error);
       this.toastr.error(
         `No se han encontrado clientes con el nombre ${name}.`,
         `No encontrado ...`
       );
+
+      this.foundClients = [];
     });
   }
 
@@ -138,7 +143,7 @@ export class FormularioPedidoComponent implements OnInit {
         if (error.status == 409) {
           swal.fire(
             'Conflicto de pedidos!',
-            'La fecha seleccionada se encuentran en su maximo diario. Por favor, intente nuevamente con una fecha distinta.',
+            'La fecha seleccionada se encuentran en su máximo diario. Por favor, intente nuevamente con una fecha distinta.',
             'error'
           );
         } else if (error.status == 204) {
@@ -170,7 +175,7 @@ export class FormularioPedidoComponent implements OnInit {
     swal
       .fire({
         title: '¿Guardar cambios?',
-        text: '¿Estás seguro/a de que deseas guardar los cambios ingresados?',
+        text: '¿Está seguro/a de que desea guardar los cambios ingresados?',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',

@@ -55,7 +55,7 @@ export class FormularioClientesComponent implements OnInit {
     swal
       .fire({
         title: '¿Guardar cambios?',
-        text: '¿Estás seguro/a de que deseas guardar los cambios ingresados?',
+        text: '¿Está seguro/a de que desea guardar los cambios ingresados?',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',

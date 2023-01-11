@@ -34,10 +34,10 @@
           <thead class="table-dark">
             <tr>
               <th>Nombre del receptor</th>
-              <th>Fecha</th>
-              <th>Dirección de reparto</th>
+              <th style="width: 10%">Fecha de entrega</th>
+              <th style="width: 20%">Dirección de reparto</th>
               <th>Total</th>
-              <th>Pendiente</th>
+              <th>Estado</th>
               <th>Productos</th>
               <th>Opciones</th>
             </tr>
@@ -45,14 +45,12 @@
           <tbody>
             <tr *ngFor="let pedido of pedidosDelDia">
               <td>{{ pedido.nombreDelReceptor }}</td>
-              <td>{{ pedido.fecha }}</td>
-              <td>{{ pedido.direccionDeReparto }}</td>
+              <td style="width: 10%">{{ pedido.fecha | date: 'dd/MM/yyyy'}}</td>
+              <td style="width: 20%">{{ pedido.direccionDeReparto }}</td>
               <td>{{ pedido.total | currency : "CLP" : "symbol-narrow" }}</td>
-              <td *ngIf="pedido.pendiente; else pedidoEntregado">
-                Entrega pendiente
-              </td>
+              <td *ngIf="pedido.pendiente; else pedidoEntregado">Pendiente</td>
               <ng-template #pedidoEntregado>
-                <td>Pedido entregado</td>
+                <td>Entregado</td>
               </ng-template>
               <td>
                 <button
@@ -78,10 +76,80 @@
               </td>
               <td class="flex-cell">
                 <button
-                  class="btn btn-success"
+                  class="btn btn-warning"
                   (click)="modificarEstadoEntrega(pedido)"
                 >
-                  Modificar entrega
+                  <svg
+                    *ngIf="pedido.pendiente; else notDelivered"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="#ffffff"
+                    viewBox="0 0 256 256"
+                  >
+                    <rect width="256" height="256" fill="none"></rect>
+                    <polyline
+                      points="172 104 113.3 160 84 132"
+                      fill="none"
+                      stroke="#ffffff"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    ></polyline>
+                    <circle
+                      cx="128"
+                      cy="128"
+                      r="96"
+                      fill="none"
+                      stroke="#ffffff"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    ></circle>
+                  </svg>
+
+                  <ng-template #notDelivered>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      fill="#ffffff"
+                      viewBox="0 0 256 256"
+                    >
+                      <rect width="256" height="256" fill="none"></rect>
+                      <circle
+                        cx="128"
+                        cy="128"
+                        r="96"
+                        fill="none"
+                        stroke="#ffffff"
+                        stroke-miterlimit="10"
+                        stroke-width="16"
+                      ></circle>
+                      <line
+                        x1="160"
+                        y1="96"
+                        x2="96"
+                        y2="160"
+                        fill="none"
+                        stroke="#ffffff"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="16"
+                      ></line>
+                      <line
+                        x1="160"
+                        y1="160"
+                        x2="96"
+                        y2="96"
+                        fill="none"
+                        stroke="#ffffff"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="16"
+                      ></line>
+                    </svg>
+                  </ng-template>
                 </button>
 
                 <button
@@ -200,15 +268,15 @@
 >
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content"> -->
-      <!-- Cabecera del modal -->
-      <!-- <div class="modal-header">
+<!-- Cabecera del modal -->
+<!-- <div class="modal-header">
         <div class="col-lg-12">
           <h3>Máximo de pedidos diarios</h3>
           <h5>Actualice el máximo de pedidos diarios permitidos.</h5>
         </div>
       </div> -->
-      <!-- Cuerpo del modal -->
-      <!-- <div class="modal-body">
+<!-- Cuerpo del modal -->
+<!-- <div class="modal-body">
         <form>
           <span class="input-group-text">
             <svg
@@ -246,8 +314,8 @@
           </button>
         </form>
       </div> -->
-      <!-- Footer del modal -->
-      <!-- <div class="modal-footer">
+<!-- Footer del modal -->
+<!-- <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           Cerrar
         </button>

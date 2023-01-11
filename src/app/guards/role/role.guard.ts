@@ -41,7 +41,7 @@ export class RoleGuard implements CanActivate {
 
     swal.fire(
       'Acceso denegado!',
-      `${this.auth.usuario.nombre}, no posees acceso a esta información.`,
+      `${this.auth.usuario.nombre}, no posee acceso a esta información.`,
       'warning'
     );
 

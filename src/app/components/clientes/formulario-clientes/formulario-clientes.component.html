@@ -111,7 +111,7 @@
           <!-- Teléfono del cliente -->
           <div class="col-lg-4">
             <div class="form-group">
-              <label for="telefono-cliente" class="form-label">Teléfono:</label>
+              <label for="telefono-cliente" class="form-label">Celular:</label>
               <div class="input-group">
                 <input
                   id="telefono-cliente"
@@ -135,7 +135,7 @@
                 >
                   <div *ngIf="telefonoCliente.errors?.['required']">
                     <small class="text-danger"
-                      >Se debe ingresar el teléfono del cliente.</small
+                      >Se debe ingresar el celular del cliente.</small
                     >
                   </div>
                   <div *ngIf="telefonoCliente.errors?.['pattern']">
@@ -157,7 +157,7 @@
           <div class="col-lg-7">
             <div class="form-group">
               <label for="direccion-cliente" class="form-label"
-                >Direccion:</label
+                >Dirección:</label
               >
               <div class="input-group">
                 <input

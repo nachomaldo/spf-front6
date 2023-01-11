@@ -5,12 +5,23 @@
 }
 
 .card {
-  width: 18rem;
+  width: 14rem;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .category-icon {
-  width: 10rem;
-  height: 10rem;
+  width: 8rem;
+  height: 8rem;
   fill: #2b8a3e;
+}
+
+.view-products {
+  margin-top: 1rem;
+  width: fit-content;
 }
 

@@ -83,7 +83,7 @@
               id="nombre-cliente-buscado"
               name="nombre-cliente-buscado"
               ngModel
-              [(ngModel)]="cliente.nombre"
+              [(ngModel)]="nombreCliente"
               #nombreClienteBuscado="ngModel"
               required
               min="3"
@@ -246,7 +246,7 @@
             <div class="col-lg-4">
               <div class="form-group">
                 <label for="telefono-cliente" class="form-label"
-                  >Teléfono:</label
+                  >Celular:</label
                 >
                 <div class="input-group">
                   <input
@@ -271,7 +271,7 @@
                   >
                     <div *ngIf="telefonoCliente.errors?.['required']">
                       <small class="text-danger"
-                        >Se debe ingresar el teléfono del cliente!</small
+                        >Se debe ingresar el celular del cliente!</small
                       >
                     </div>
                     <div *ngIf="telefonoCliente.errors?.['pattern']">
@@ -293,7 +293,7 @@
             <div class="col-lg-7">
               <div class="form-group">
                 <label for="direccion-cliente" class="form-label"
-                  >Direccion:</label
+                  >Dirección:</label
                 >
                 <div class="input-group">
                   <input
@@ -472,7 +472,7 @@
           <div class="col-lg-7">
             <div class="form-group">
               <label for="direccion-reparto" class="form-label"
-                >Direccion del reparto:</label
+                >Dirección del reparto:</label
               >
               <div class="input-group">
                 <input
@@ -496,7 +496,7 @@
                   class="col-lg-12"
                 >
                   <small class="text-danger"
-                    >Se debe ingresar la direccion del reparto!</small
+                    >Se debe ingresar la dirección del reparto!</small
                   >
                 </div>
               </div>

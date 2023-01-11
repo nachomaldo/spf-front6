@@ -81,7 +81,7 @@
           <thead class="table-dark">
             <tr>
               <th>Nombre</th>
-              <th>Teléfono</th>
+              <th>Celular</th>
               <th style="width: 20%">Dirección</th>
               <th>E-mail</th>
               <th>Pedidos</th>
@@ -253,7 +253,7 @@
                 <tr *ngFor="let pedido of pedidosCliente">
                   <td>{{ pedido.nombreDelReceptor }}</td>
                   <td>{{ pedido.direccionDeReparto }}</td>
-                  <td>{{ pedido.fecha }}</td>
+                  <td>{{ pedido.fecha | date: 'dd/MM/yyyy'}}</td>
                   <td>{{ pedido.total }}</td>
                   <td>
                     {{
@@ -417,7 +417,7 @@
                   <td>
                     {{ deuda.monto | currency : "CLP" : "symbol-narrow" }}
                   </td>
-                  <td>{{ deuda.fecha }}</td>
+                  <td>{{ deuda.fecha | date: 'dd/MM/yyyy'}}</td>
                   <td *ngIf="deuda.vigente; else deudaCancelada">Vigente</td>
 
                   <ng-template #deudaCancelada>
@@ -513,7 +513,7 @@
               <thead class="table-dark">
                 <tr>
                   <th>Nombre</th>
-                  <th>Teléfono</th>
+                  <th>Celular</th>
                   <th style="width: 20%">Dirección</th>
                   <th>E-mail</th>
                   <th>Pedidos</th>
@@ -709,7 +709,7 @@
               <thead class="table-dark">
                 <tr>
                   <th>Nombre</th>
-                  <th>Teléfono</th>
+                  <th>Celular</th>
                   <th style="width: 20%">Dirección</th>
                   <th>E-mail</th>
                   <th *ngIf="authService.hasRole('ROLE_OPERADOR')">Opciones</th>

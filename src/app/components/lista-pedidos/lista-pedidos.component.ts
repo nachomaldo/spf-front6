@@ -71,7 +71,7 @@ export class ListaPedidosComponent implements OnInit {
   modificarEstadoEntrega(pedido: Pedido) {
     swal.fire({
       title: '¿Modificar el estado de entrega?',
-      text: `¿Desea cambiar el estado de entrega a ${pedido.pendiente ? 'Pedido entregado' : 'Entrega pendiente'}?`,
+      text: `¿Desea cambiar el estado a ${pedido.pendiente ? 'entregado' : 'pendiente'}?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',

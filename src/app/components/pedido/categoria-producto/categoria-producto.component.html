@@ -23,10 +23,13 @@
     </div>
     <div class="card-body">
       <h5 class="card-title">Alimentos para perros</h5>
-      <p class="card-text">
-        Selección de productos alimenticios para perros.
-      </p>
-      <a href="#" class="btn btn-success" [routerLink]="['/productos', 'alimento-perro', 0]">Ver productos &rarr;</a>
+      <p class="card-text">Selección de productos alimenticios para perros.</p>
+      <a
+        href="#"
+        class="btn btn-success view-products"
+        [routerLink]="['/productos', 'alimento-perro', 0]"
+        >Ver productos &rarr;</a
+      >
     </div>
   </div>
 
@@ -46,10 +49,13 @@
     </div>
     <div class="card-body">
       <h5 class="card-title">Alimentos para gatos</h5>
-      <p class="card-text">
-        Selección de productos alimenticios para gatos.
-      </p>
-      <a href="#" class="btn btn-success" [routerLink]="['/productos', 'alimento-gato', 0]">Ver productos &rarr;</a>
+      <p class="card-text">Selección de productos alimenticios para gatos.</p>
+      <a
+        href="#"
+        class="btn btn-success view-products"
+        [routerLink]="['/productos', 'alimento-gato', 0]"
+        >Ver productos &rarr;</a
+      >
     </div>
   </div>
 
@@ -68,11 +74,19 @@
       </svg>
     </div>
     <div class="card-body">
-      <h5 class="card-title">Antiparasitarios y antipulgas</h5>
-      <p class="card-text">
-        Productos de uso casero para el tratamiento de parásitos comunes, internos y externos.
-      </p>
-      <a href="#" class="btn btn-success" [routerLink]="['/productos', 'antiparasitario', 0]">Ver productos &rarr;</a>
+      <div>
+        <h5 class="card-title">Antiparasitarios y antipulgas</h5>
+        <p class="card-text">
+          Productos de uso casero para el tratamiento de parásitos comunes,
+          internos y externos.
+        </p>
+      </div>
+      <a
+        href="#"
+        class="btn btn-success view-products"
+        [routerLink]="['/productos', 'antiparasitario', 0]"
+        >Ver productos &rarr;</a
+      >
     </div>
   </div>
 
@@ -83,7 +97,7 @@
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 256 256"
         class="category-icon"
-        >
+      >
         <rect width="256" height="256" fill="none"></rect>
         <path
           d="M232,96H212a8,8,0,0,0-8-8H132a8,8,0,0,0-8,8H64V52a12,12,0,0,1,24,0,8,8,0,0,0,16,0,28,28,0,0,0-56,0V96H24A16,16,0,0,0,8,112v32a56,56,0,0,0,56,56v16a8,8,0,0,0,16,0V200h96v16a8,8,0,0,0,16,0V200a56,56,0,0,0,56-56V112A16,16,0,0,0,232,96Zm-36,8v36H140V104Z"
@@ -95,10 +109,15 @@
       <p class="card-text">
         Productos para el aseo y cuidado del pelaje de las mascotas.
       </p>
-      <a href="#" class="btn btn-success" [routerLink]="['/productos', 'higiene', 0]">Ver productos &rarr;</a>
+      <a
+        href="#"
+        class="btn btn-success view-products"
+        [routerLink]="['/productos', 'higiene', 0]"
+        >Ver productos &rarr;</a
+      >
     </div>
   </div>
-  
+
   <!-- Accesorios para mascotas -->
   <div class="card">
     <div class="card-header">
@@ -106,7 +125,7 @@
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 256 256"
         class="category-icon"
-        >
+      >
         <rect width="256" height="256" fill="none"></rect>
         <path
           d="M240,108a28,28,0,1,1-28-28A28.1,28.1,0,0,1,240,108ZM72,108a28,28,0,1,0-28,28A28.1,28.1,0,0,0,72,108ZM92,88A28,28,0,1,0,64,60,28.1,28.1,0,0,0,92,88Zm72,0a28,28,0,1,0-28-28A28.1,28.1,0,0,0,164,88Zm23.1,60.8a35.3,35.3,0,0,1-16.9-21.1,43.9,43.9,0,0,0-84.4,0A35.5,35.5,0,0,1,69,148.8,40,40,0,0,0,88,224a40.5,40.5,0,0,0,15.5-3.1,64.2,64.2,0,0,1,48.9-.1A39.6,39.6,0,0,0,168,224a40,40,0,0,0,19.1-75.2Z"
@@ -115,10 +134,13 @@
     </div>
     <div class="card-body">
       <h5 class="card-title">Accesorios para mascotas</h5>
-      <p class="card-text">
-        Productos misceláneos para mascotas.
-      </p>
-      <a href="#" class="btn btn-success" [routerLink]="['/productos', 'accesorios', 0]">Ver productos &rarr;</a>
+      <p class="card-text">Productos misceláneos para mascotas.</p>
+      <a
+        href="#"
+        class="btn btn-success view-products"
+        [routerLink]="['/productos', 'accesorios', 0]"
+        >Ver productos &rarr;</a
+      >
     </div>
   </div>
 </div>
